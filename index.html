@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Air Quality Visualisation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400&family=Space+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- PHASE 1: The Audit -->
+  <div id="phase1" class="viewport-page active">
+    
+    <!-- Title Screen -->
+    <div id="p1-title" class="content">
+    <!-- Title & Input Sequence -->
+    <div id="p1-title-screen" class="content" style="max-width: 1200px;">
+
+      <div id="q_years" class="q-container" style="opacity:0; display:none; transition: opacity 800ms;">
+        <label class="q-label">How many years have you lived in Delhi?</label>
+        <input type="number" id="input_years" class="minimal-input" min="1" max="50" placeholder="Type and press ↵">
+        <div id="warn_years" style="color: red; font-size: 12px; margin-top: 8px; opacity: 0; transition: opacity 0.3s; pointer-events: none;">oops too old</div>
+      </div>
+
+      <div id="q_outdoors" class="q-container" style="opacity:0; display:none; transition: opacity 800ms;">
+        <label class="q-label">How many hours a day do you spend outdoors?<br><span style="font-size:14px; color:var(--text-muted);">(excluding commute)</span></label>
+        <input type="number" id="input_outdoors" class="minimal-input" min="0" max="24" step="0.5" placeholder="Type and press ↵">
+        <div id="warn_outdoors" style="color: red; font-size: 12px; margin-top: 8px; opacity: 0; transition: opacity 0.3s; pointer-events: none;">there are only 24 hours in a day</div>
+      </div>
+
+      <div id="q_purifier" class="q-container" style="opacity:0; display:none; transition: opacity 800ms;">
+        <label class="q-label">What is the primary air filtration in your home?</label>
+        <div class="styled-options" id="input_home_purifier_options">
+          <div class="t-option" data-value="none">No air purifier</div>
+          <div class="t-option" data-value="budget">Budget purifier</div>
+          <div class="t-option" data-value="mid">Mid-range purifier</div>
+          <div class="t-option" data-value="premium">Premium purifier</div>
+        </div>
+        <input type="hidden" id="input_home_purifier" value="">
+      </div>
+
+      <div id="q_work_purifier" class="q-container" style="opacity:0; display:none; transition: opacity 800ms;">
+        <label class="q-label">What is the primary air filtration in your workspace?</label>
+        <div class="styled-options" id="input_work_purifier_options">
+          <div class="t-option" data-value="none">No filtration</div>
+          <div class="t-option" data-value="budget">Basic purifiers</div>
+          <div class="t-option" data-value="mid">Central air / Mid-range purifiers</div>
+          <div class="t-option" data-value="premium">Sealed premium HEPA</div>
+        </div>
+        <input type="hidden" id="input_work_purifier" value="">
+      </div>
+
+      <div id="q_commute" class="q-container" style="opacity:0; display:none; transition: opacity 800ms;">
+        <label class="q-label">How do you generally commute?</label>
+        <div class="styled-options" id="input_commute_options">
+          <div class="t-option" data-value="ac_car">Personal AC Car</div>
+          <div class="t-option" data-value="metro">Metro / AC Cab</div>
+          <div class="t-option" data-value="auto">Auto / Bus / Two-wheeler</div>
+        </div>
+        <input type="hidden" id="input_commute" value="">
+      </div>
+
+      <div id="q_commute_time" class="q-container" style="opacity:0; display:none; transition: opacity 800ms;">
+        <label class="q-label">How many hours do you spend on commute?</label>
+        <input type="number" id="input_commute_time" class="minimal-input" min="0" max="24" step="0.5" placeholder="Type and press ↵">
+        <div id="warn_commute_time" style="color: red; font-size: 12px; margin-top: 8px; opacity: 0; transition: opacity 0.3s; pointer-events: none;">there are only 24 hours in a day</div>
+      </div>
+
+      <div id="q_worker" class="q-container" style="opacity:0; display:none; transition: opacity 800ms;">
+        <label class="q-label">Who in your daily life do you interact with the most?</label>
+        <div class="styled-options" id="input_worker_options">
+          <div class="t-option" data-value="gig_delivery">The person who delivers your food and groceries</div>
+          <div class="t-option" data-value="house_help">The person who helps run your home</div>
+          <div class="t-option" data-value="security_guard">The person who guards your building</div>
+          <div class="t-option" data-value="street_vendor">The person who sells you things on the street</div>
+        </div>
+        <input type="hidden" id="input_worker" value="">
+        <button id="btn_worker_confirm" class="t-enter-btn" style="opacity:0; display:none;">Confirm (↵)</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <!-- PHASE 3: The Receipt -->
+  <div id="phase3" class="viewport-page" style="display: block; visibility: hidden; pointer-events: none; overflow-y: auto;">
+    
+    <div style="max-width: 1400px; margin: 0 auto; width: 100%;">
+    </div>
+
+    <!-- The Receipt -->
+    <div class="receipt-wrapper" id="receipt_section" style="opacity:0; transition: opacity 800ms;">
+      <div class="receipt-grid" id="receipt_grid">
+        <!-- User Receipt -->
+        <div id="user_receipt_container" class="receipt-wrapper-single">
+           <!-- Content injected by JS -->
+        </div>
+
+        <!-- Print Action Side -->
+        <div id="print_action_container" class="print-action-box">
+           <button id="print_btn" class="thermal-print-btn">DOWNLOAD RECEIPT</button>
+           <div id="print_message" class="thermal-message">
+             Thank you for your contribution. This person's lungs have been charged accordingly.
+           </div>
+        </div>
+      </div>
+      
+      <div class="receipt-outro">
+        Clean air was not distributed. It was purchased.
+      </div>
+      
+      <div class="sources-footer">
+        — CPCB / DPCC — historical PM2.5 data<br>
+        — AQLI, University of Chicago EPIC — life expectancy loss<br>
+        — Burnett et al. (2014), Environ Health Perspect — disease risk<br>
+        — SAFAR, IITM — PM2.5 composition, NO₂ data<br>
+        — Fairwork India 2024 — worker income and conditions
+      </div>
+    </div>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
